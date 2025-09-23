@@ -2,22 +2,9 @@
 
 一个可扩展的通用虚拟化管理平台，支持 LXD、Incus、Docker 和 Proxmox VE。
 
-## 技术栈
+## 详细说明
 
-### 后端
-
-* Gin Web 框架
-* GORM ORM
-* MySQL 数据库
-* JWT 认证
-
-### 前端
-
-* Vue 3
-* Vite
-* Element Plus
-* Pinia
-* Vue Router
+[www.spiritlhl.net](https://www.spiritlhl.net/)
 
 ## 快速开始
 
@@ -35,7 +22,7 @@
 
 ### 初始化步骤
 
-1. 访问 [http://localhost:8080，会自动跳转至系统初始化页面。](http://localhost:8080，会自动跳转至系统初始化页面。)
+1. 访问 [http://localhost:8080](http://localhost:8080)，会自动跳转至系统初始化页面。
 2. 设置管理员账户信息。
 3. 初始化完成后即可正常使用。
 
@@ -50,26 +37,36 @@
 
 ## 配置文件
 
-主要配置文件位于 `server/config.yaml`，包含：
+主要配置文件位于 `server/config.yaml`
 
-* 数据库配置
-* 服务端口设置
-* JWT 密钥配置
-* 虚拟化提供商配置
+## 技术栈
+
+### 后端
+
+* Gin Web 框架
+* GORM ORM
+* MySQL 数据库
+* JWT 认证
+
+### 前端
+
+* Vue 3
+* Vite
+* Element Plus
+* Pinia
+* Vue Router
 
 ## 部署说明
 
 ### 生产环境部署
 
 1. 构建前端
-
 ```bash
 cd web
 npm run build
 ```
 
 2. 构建后端
-
 ```bash
 cd server
 go build -o oneclickvirt main.go
@@ -87,9 +84,6 @@ go build -o oneclickvirt main.go
 ## 演示截图
 
 ![](./.back/1.png)
-
 ![](./.back/2.png)
-
 ![](./.back/3.png)
-
 ![](./.back/4.png)
