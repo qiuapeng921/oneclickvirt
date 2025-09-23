@@ -75,15 +75,10 @@ go build -o oneclickvirt main.go
 3. 配置反向代理（推荐使用 Nginx）。
 4. 设置环境变量 `GIN_MODE=release`。
 
-## 赞助
-
-<img src="https://github.com/user-attachments/assets/78bab50f-9e65-42ef-bad5-9430799afc1b" width="400" />
-
-支持链接：[https://ko-fi.com/spiritlhl](https://ko-fi.com/spiritlhl)
-
 ## 演示截图
 
 ![](./.back/1.png)
 ![](./.back/2.png)
 ![](./.back/3.png)
 ![](./.back/4.png)
+![](./.back/5.png)

@@ -75,15 +75,10 @@ go build -o oneclickvirt main.go
 3. Configure reverse proxy (Nginx is recommended).
 4. Set environment variable `GIN_MODE=release`.
 
-## Sponsorship
-
-<img src="https://github.com/user-attachments/assets/78bab50f-9e65-42ef-bad5-9430799afc1b" width="400" />
-
-Support link: [https://ko-fi.com/spiritlhl](https://ko-fi.com/spiritlhl)
-
 ## Demo Screenshots
 
 ![](./.back/1.png)
 ![](./.back/2.png)
 ![](./.back/3.png)
 ![](./.back/4.png)
+![](./.back/5.png)
