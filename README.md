@@ -1,11 +1,10 @@
 # OneClickVirt 虚拟化管理平台
 
-一个基于 Go + Vue 3 的现代化虚拟化管理平台，支持多种虚拟化技术。
+一个可扩展的支持 lxd/incus/docker/proxmoxve 的通用虚拟化控制平台。
 
 ## 技术栈
 
 ### 后端
-- Go 1.21+
 - Gin Web框架
 - GORM ORM
 - MySQL数据库
@@ -25,30 +24,8 @@
 - Node.js 19+
 - npm/yarn
 
-### 安装步骤
+### 访问地址
 
-1. 克隆项目
-```bash
-git clone <repository-url>
-cd oneclickvirt
-```
-
-2. 启动后端服务
-```bash
-cd server
-go mod tidy
-go run main.go
-```
-
-3. 启动前端服务
-```bash
-cd web
-npm i
-npm install -D terser
-npm run dev
-```
-
-4. 访问应用
 - 前端地址：http://localhost:8080
 - 后端API：http://localhost:8888
 - API文档：http://localhost:8888/swagger/index.html
@@ -67,17 +44,6 @@ npm run dev
 - **普通用户**：testuser / TestUser123!@#
 
 > **注意**：首次登录后请立即修改默认密码
-
-## 密码策略
-
-系统采用强密码策略，密码必须满足以下要求：
-- 最少8位字符
-- 包含大写字母 (A-Z)
-- 包含小写字母 (a-z)  
-- 包含数字 (0-9)
-- 包含特殊字符 (!@#$%^&*等)
-- 不能包含常见弱密码
-- 不能包含用户名
 
 ## 配置文件
 
@@ -105,3 +71,19 @@ go build -o oneclickvirt main.go
 
 3. 配置反向代理（推荐使用Nginx）
 4. 设置环境变量 `GIN_MODE=release`
+
+## 赞助
+
+<img src="https://github.com/user-attachments/assets/78bab50f-9e65-42ef-bad5-9430799afc1b" width="400" />
+
+https://ko-fi.com/spiritlhl
+
+## 演示图
+
+[](./.back/1.png)
+
+[](./.back/2.png)
+
+[](./.back/3.png)
+
+[](./.back/4.png)
