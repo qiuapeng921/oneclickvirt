@@ -1,0 +1,127 @@
+auth:
+    email-password: ""
+    email-smtp-host: ""
+    email-smtp-port: "3306"
+    email-username: root
+    enable-email: false
+    enable-public-registration: true
+    enable-qq: false
+    enable-telegram: false
+    qq-app-id: ""
+    qq-app-key: ""
+    telegram-bot-token: ""
+captcha:
+    enabled: true
+    expire-time: 300
+    height: 40
+    length: 4
+    width: 120
+cdn:
+    base-endpoint: https://cdn.spiritlhl.net/
+    endpoints:
+        - https://cdn0.spiritlhl.top/
+        - http://cdn3.spiritlhl.net/
+        - http://cdn1.spiritlhl.net/
+        - http://cdn2.spiritlhl.net/
+cors:
+    mode: ""
+    whitelist: []
+invite-code:
+    default-max-uses: 1
+    enabled: false
+    required: false
+jwt:
+    buffer-time: 1d
+    expires-time: 7d
+    issuer: oneclickvirt
+    signing-key: ""
+mysql:
+    auto-create: true
+    db-name: oneclickvirt_test
+    engine: InnoDB
+    log-mode: error
+    log-zap: false
+    max-idle-conns: 10
+    max-open-conns: 100
+    password: ""
+    path: 127.0.0.1
+    port: "3306"
+    prefix: ""
+    singular: false
+    username: root
+quota:
+    default-level: 1
+    instance-type-permissions:
+        min-level-for-container: 1
+        min-level-for-delete: 2
+        min-level-for-vm: 1
+    level-limits:
+        1:
+            max-instances: 1
+            max-resources:
+                cpu: 1
+                disk: 1025
+                memory: 400
+            max-traffic: 102400
+        2:
+            max-instances: 2
+            max-resources:
+                cpu: 2
+                disk: 2050
+                memory: 750
+            max-traffic: 204800
+        3:
+            max-instances: 3
+            max-resources:
+                cpu: 3
+                disk: 3100
+                memory: 1100
+            max-traffic: 307200
+        4:
+            max-instances: 4
+            max-resources:
+                cpu: 4
+                disk: 4100
+                memory: 1100
+            max-traffic: 409600
+        5:
+            max-instances: 5
+            max-resources:
+                cpu: 5
+                disk: 5100
+                memory: 2100
+            max-traffic: 512000
+redis:
+    addr: ""
+    db: 0
+    password: ""
+sysm:
+    db-type: mysql
+system:
+    addr: 8888
+    db-type: mysql
+    env: development
+    iplimit-count: 15000
+    iplimit-time: 3600
+    oss-type: local
+    use-multipoint: false
+    use-redis: false
+task:
+    delete-retry-count: 3
+    delete-retry-delay: 2
+zap:
+    compress-logs: true
+    director: storage/logs
+    encode-level: LowercaseLevelEncoder
+    format: console
+    level: debug
+    log-in-console: false
+    max-array-elements: 5
+    max-backups: 15
+    max-file-size: 5
+    max-log-length: 2000
+    max-string-length: 1000
+    prefix: '[oneclickvirt]'
+    retention-day: 3
+    show-line: false
+    stacktrace-key: stacktrace

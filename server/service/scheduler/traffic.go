@@ -1,0 +1,125 @@
+package scheduler
+
+import (
+	"context"
+
+	"oneclickvirt/global"
+	"oneclickvirt/model/provider"
+	"oneclickvirt/model/user"
+	"oneclickvirt/service/traffic"
+
+	"go.uber.org/zap"
+)
+
+// TrafficLimitServiceInterface 流量限制服务接口
+type TrafficLimitServiceInterface interface {
+	SyncAllTrafficLimitsWithVnStat(ctx context.Context) error
+	CheckUserTrafficLimitWithVnStat(userID uint) (bool, string, error)
+	CheckProviderTrafficLimitWithVnStat(providerID uint) (bool, string, error)
+}
+
+// TrafficServiceInterface 流量服务接口
+type TrafficServiceInterface interface {
+	SyncAllTrafficData() error
+	CheckUserTrafficLimit(userID uint) (bool, error)
+	CheckProviderTrafficLimit(providerID uint) (bool, error)
+	InitUserTrafficQuota(userID uint) error
+}
+
+// syncAllTrafficData 同步所有实例的流量数据（使用vnStat）
+func (s *SchedulerService) syncAllTrafficData() {
+	// 降低流量同步的日志级别，减少频繁输出
+	global.APP_LOG.Debug("开始同步流量数据（基于vnStat）")
+
+	// 使用流量服务进行同步
+	trafficService := traffic.NewTrafficService()
+	if err := trafficService.SyncAllTrafficData(); err != nil {
+		global.APP_LOG.Error("同步流量数据失败", zap.Error(err))
+	} else {
+		global.APP_LOG.Debug("流量数据同步完成")
+	}
+}
+
+// checkMonthlyTrafficReset 检查月度流量重置（使用vnStat）
+func (s *SchedulerService) checkMonthlyTrafficReset() {
+	// 获取所有活跃用户
+	var userIDs []uint
+	if err := global.APP_DB.Model(&user.User{}).
+		Where("status = ?", 1).
+		Pluck("id", &userIDs).Error; err != nil {
+		global.APP_LOG.Error("获取用户列表失败", zap.Error(err))
+		return
+	}
+
+	// 获取所有活跃Provider
+	var providerIDs []uint
+	if err := global.APP_DB.Model(&provider.Provider{}).
+		Where("status = ?", "active").
+		Pluck("id", &providerIDs).Error; err != nil {
+		global.APP_LOG.Error("获取Provider列表失败", zap.Error(err))
+		return
+	}
+
+	// 使用流量限制服务检查流量
+	trafficLimitService := traffic.NewTrafficLimitService()
+
+	// 检查用户流量限制
+	for _, userID := range userIDs {
+		isLimited, reason, err := trafficLimitService.CheckUserTrafficLimitWithVnStat(userID)
+		if err != nil {
+			global.APP_LOG.Error("检查用户流量限制失败",
+				zap.Uint("userID", userID),
+				zap.Error(err))
+		} else if isLimited {
+			global.APP_LOG.Info("用户流量超限",
+				zap.Uint("userID", userID),
+				zap.String("reason", reason))
+		}
+	}
+
+	// 检查Provider流量限制
+	for _, providerID := range providerIDs {
+		isLimited, reason, err := trafficLimitService.CheckProviderTrafficLimitWithVnStat(providerID)
+		if err != nil {
+			global.APP_LOG.Error("检查Provider流量限制失败",
+				zap.Uint("providerID", providerID),
+				zap.Error(err))
+		} else if isLimited {
+			global.APP_LOG.Info("Provider流量超限",
+				zap.Uint("providerID", providerID),
+				zap.String("reason", reason))
+		}
+	}
+
+	global.APP_LOG.Debug("流量重置检查完成",
+		zap.Int("userCount", len(userIDs)),
+		zap.Int("providerCount", len(providerIDs)))
+}
+
+// InitializeUserTrafficQuotas 初始化所有用户的流量配额
+func (s *SchedulerService) InitializeUserTrafficQuotas() {
+	global.APP_LOG.Debug("开始初始化用户流量配额")
+
+	var users []user.User
+	if err := global.APP_DB.Where("total_traffic = 0 OR total_traffic IS NULL").Find(&users).Error; err != nil {
+		global.APP_LOG.Error("获取需要初始化流量配额的用户失败", zap.Error(err))
+		return
+	}
+
+	if len(users) == 0 {
+		return // 没有用户需要初始化，不记录日志
+	}
+
+	// 使用流量服务初始化用户流量配额
+	trafficService := traffic.NewTrafficService()
+	for _, u := range users {
+		if err := trafficService.InitUserTrafficQuota(u.ID); err != nil {
+			global.APP_LOG.Error("初始化用户流量配额失败",
+				zap.Uint("userID", u.ID),
+				zap.Error(err))
+		}
+	}
+
+	global.APP_LOG.Info("用户流量配额初始化完成",
+		zap.Int("userCount", len(users)))
+}

@@ -1,0 +1,5307 @@
+basePath: /api/v1
+definitions:
+  admin.AdminTaskListResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/admin.AdminTaskResponse'
+        type: array
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      total:
+        type: integer
+    type: object
+  admin.AdminTaskResponse:
+    properties:
+      canForceStop:
+        type: boolean
+      completedAt:
+        type: string
+      createdAt:
+        type: string
+      errorMessage:
+        type: string
+      id:
+        type: integer
+      instanceId:
+        type: integer
+      instanceName:
+        type: string
+      instanceType:
+        type: string
+      isForceStoppable:
+        type: boolean
+      progress:
+        type: integer
+      providerId:
+        type: integer
+      providerName:
+        type: string
+      remainingTime:
+        description: 剩余时间（秒）
+        type: integer
+      startedAt:
+        type: string
+      status:
+        type: string
+      statusMessage:
+        type: string
+      taskType:
+        type: string
+      timeoutDuration:
+        type: integer
+      userId:
+        type: integer
+      userName:
+        type: string
+      uuid:
+        type: string
+    type: object
+  admin.AutoConfigureRequest:
+    properties:
+      force:
+        description: 是否强制执行（即使有正在运行的任务）
+        type: boolean
+      providerId:
+        type: integer
+      showHistory:
+        description: 是否显示历史记录
+        type: boolean
+    required:
+    - providerId
+    type: object
+  admin.AutoConfigureResponse:
+    properties:
+      canProceed:
+        type: boolean
+      historyTasks:
+        description: 历史任务
+        items:
+          $ref: '#/definitions/admin.ConfigurationTaskResponse'
+        type: array
+      message:
+        type: string
+      runningTask:
+        allOf:
+        - $ref: '#/definitions/admin.ConfigurationTaskResponse'
+        description: 当前运行的任务
+      status:
+        type: string
+      streamUrl:
+        description: 实时流URL
+        type: string
+      taskId:
+        type: integer
+    type: object
+  admin.BatchAnnouncementRequest:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - ids
+    type: object
+  admin.BatchDeleteUsersRequest:
+    properties:
+      userIds:
+        items:
+          type: integer
+        type: array
+    required:
+    - userIds
+    type: object
+  admin.BatchUpdateStatusRequest:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+      status:
+        maximum: 1
+        minimum: 0
+        type: integer
+    required:
+    - ids
+    type: object
+  admin.BatchUpdateUserLevelRequest:
+    properties:
+      level:
+        maximum: 5
+        minimum: 1
+        type: integer
+      userIds:
+        items:
+          type: integer
+        type: array
+    required:
+    - userIds
+    type: object
+  admin.BatchUpdateUserStatusRequest:
+    properties:
+      status:
+        maximum: 1
+        minimum: 0
+        type: integer
+      userIds:
+        items:
+          type: integer
+        type: array
+    required:
+    - userIds
+    type: object
+  admin.ConfigurationTaskDetailResponse:
+    properties:
+      completedAt:
+        type: string
+      createdAt:
+        type: string
+      duration:
+        description: 格式化的时长，如 "2m30s"
+        type: string
+      errorMessage:
+        type: string
+      executorId:
+        type: integer
+      executorName:
+        type: string
+      id:
+        type: integer
+      logOutput:
+        description: 完整日志
+        type: string
+      logSummary:
+        type: string
+      progress:
+        type: integer
+      providerId:
+        type: integer
+      providerName:
+        type: string
+      providerType:
+        type: string
+      resultData:
+        additionalProperties: true
+        description: 结果数据
+        type: object
+      startedAt:
+        type: string
+      status:
+        type: string
+      success:
+        type: boolean
+      taskType:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  admin.ConfigurationTaskListResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/admin.ConfigurationTaskResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  admin.ConfigurationTaskResponse:
+    properties:
+      completedAt:
+        type: string
+      createdAt:
+        type: string
+      duration:
+        description: 格式化的时长，如 "2m30s"
+        type: string
+      errorMessage:
+        type: string
+      executorId:
+        type: integer
+      executorName:
+        type: string
+      id:
+        type: integer
+      logSummary:
+        type: string
+      progress:
+        type: integer
+      providerId:
+        type: integer
+      providerName:
+        type: string
+      providerType:
+        type: string
+      startedAt:
+        type: string
+      status:
+        type: string
+      success:
+        type: boolean
+      taskType:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  admin.CreateAnnouncementRequest:
+    properties:
+      content:
+        type: string
+      contentHtml:
+        type: string
+      endTime:
+        type: string
+      isSticky:
+        type: boolean
+      priority:
+        type: integer
+      startTime:
+        type: string
+      title:
+        type: string
+      type:
+        description: 限制类型
+        enum:
+        - homepage
+        - topbar
+        type: string
+    required:
+    - content
+    - title
+    - type
+    type: object
+  admin.CreateInstanceRequest:
+    properties:
+      cpu:
+        type: integer
+      disk:
+        type: integer
+      image:
+        type: string
+      instance_type:
+        type: string
+      memory:
+        type: integer
+      name:
+        type: string
+      provider:
+        type: string
+      userId:
+        type: integer
+    required:
+    - image
+    - name
+    - provider
+    type: object
+  admin.CreateInviteCodeRequest:
+    properties:
+      code:
+        description: 自定义邀请码，如果为空则自动生成
+        type: string
+      count:
+        maximum: 100
+        minimum: 1
+        type: integer
+      expiresAt:
+        type: string
+      length:
+        description: 邀请码长度，仅在自动生成时有效
+        type: integer
+      maxUses:
+        type: integer
+      remark:
+        type: string
+    required:
+    - count
+    type: object
+  admin.CreateProviderRequest:
+    properties:
+      allowClaim:
+        type: boolean
+      config:
+        type: string
+      container_enabled:
+        type: boolean
+      country:
+        type: string
+      countryCode:
+        type: string
+      endpoint:
+        type: string
+      expiresAt:
+        description: '过期时间，格式: "2006-01-02 15:04:05"'
+        type: string
+      maxContainerInstances:
+        description: 最大容器数量限制
+        type: integer
+      maxVMInstances:
+        description: 最大虚拟机数量限制
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      region:
+        type: string
+      sshPort:
+        type: integer
+      token:
+        type: string
+      totalQuota:
+        type: integer
+      type:
+        type: string
+      username:
+        type: string
+      vm_enabled:
+        type: boolean
+    required:
+    - name
+    - type
+    type: object
+  admin.CreateUserRequest:
+    properties:
+      email:
+        type: string
+      level:
+        type: integer
+      nickname:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      qq:
+        type: string
+      roleId:
+        type: integer
+      status:
+        type: integer
+      telegram:
+        type: string
+      totalQuota:
+        type: integer
+      userType:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - userType
+    - username
+    type: object
+  admin.ForceStopTaskRequest:
+    properties:
+      reason:
+        description: 强制停止原因
+        type: string
+      taskId:
+        type: integer
+    required:
+    - taskId
+    type: object
+  admin.ProviderStatusResponse:
+    properties:
+      apiStatus:
+        type: string
+      certFingerprint:
+        type: string
+      certPath:
+        type: string
+      id:
+        type: integer
+      keyPath:
+        type: string
+      lastApiCheck:
+        type: string
+      lastSshCheck:
+        type: string
+      name:
+        type: string
+      nodeCpuCores:
+        description: 节点资源信息
+        type: integer
+      nodeDiskTotal:
+        type: integer
+      nodeMemoryTotal:
+        type: integer
+      resourceSynced:
+        type: boolean
+      resourceSyncedAt:
+        type: string
+      sshStatus:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+      uuid:
+        type: string
+    type: object
+  admin.ResetUserPasswordRequest:
+    type: object
+  admin.ResetUserPasswordResponse:
+    properties:
+      newPassword:
+        description: 生成的新密码
+        type: string
+    type: object
+  admin.TaskStatsResponse:
+    properties:
+      completedTasks:
+        type: integer
+      failedTasks:
+        type: integer
+      pendingTasks:
+        type: integer
+      runningTasks:
+        type: integer
+      timeoutTasks:
+        type: integer
+      totalTasks:
+        type: integer
+    type: object
+  admin.UpdateAnnouncementRequest:
+    properties:
+      content:
+        type: string
+      contentHtml:
+        type: string
+      endTime:
+        type: string
+      id:
+        type: integer
+      isSticky:
+        type: boolean
+      priority:
+        type: integer
+      startTime:
+        type: string
+      status:
+        type: integer
+      title:
+        type: string
+      type:
+        enum:
+        - homepage
+        - topbar
+        type: string
+    type: object
+  admin.UpdateInstanceTypePermissionsRequest:
+    properties:
+      minLevelForContainer:
+        maximum: 5
+        minimum: 1
+        type: integer
+      minLevelForVM:
+        maximum: 5
+        minimum: 1
+        type: integer
+    type: object
+  admin.UpdateSystemConfigRequest:
+    properties:
+      category:
+        type: string
+      key:
+        type: string
+      remark:
+        type: string
+      type:
+        type: string
+      value:
+        type: string
+    required:
+    - key
+    type: object
+  admin.UpdateUserLevelRequest:
+    properties:
+      level:
+        maximum: 5
+        minimum: 1
+        type: integer
+    type: object
+  admin.UpdateUserStatusRequest:
+    properties:
+      status:
+        maximum: 1
+        minimum: 0
+        type: integer
+      userIds:
+        items:
+          type: integer
+        type: array
+    required:
+    - userIds
+    type: object
+  auth.ForgotPasswordRequest:
+    properties:
+      captcha:
+        type: string
+      captchaId:
+        type: string
+      email:
+        example: user@example.com
+        type: string
+      userType:
+        type: string
+    required:
+    - email
+    type: object
+  auth.LoginRequest:
+    properties:
+      captcha:
+        type: string
+      captchaId:
+        type: string
+      loginType:
+        description: username, email, phone
+        type: string
+      password:
+        example: password
+        type: string
+      userType:
+        description: admin, user
+        type: string
+      username:
+        example: admin
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  auth.RegisterRequest:
+    properties:
+      captcha:
+        type: string
+      captchaId:
+        type: string
+      email:
+        example: user@example.com
+        type: string
+      inviteCode:
+        example: INVITE123
+        type: string
+      nickname:
+        example: 昵称
+        type: string
+      password:
+        example: password123
+        type: string
+      phone:
+        example: "13800138000"
+        type: string
+      qq:
+        type: string
+      telegram:
+        type: string
+      username:
+        example: user123
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  auth.ResetPasswordRequest:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
+  common.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+  config.AuthConfig:
+    properties:
+      emailPassword:
+        type: string
+      emailSMTPHost:
+        type: string
+      emailSMTPPort:
+        type: integer
+      emailUsername:
+        type: string
+      enableEmail:
+        type: boolean
+      enablePublicRegistration:
+        description: 是否启用公开注册（无需邀请码）
+        type: boolean
+      enableQQ:
+        type: boolean
+      enableTelegram:
+        type: boolean
+      qqAppID:
+        type: string
+      qqAppKey:
+        type: string
+      telegramBotToken:
+        type: string
+    type: object
+  config.InviteCodeConfig:
+    properties:
+      defaultMaxUses:
+        description: 默认最大使用次数
+        type: integer
+      enabled:
+        description: 是否启用邀请码系统
+        type: boolean
+      required:
+        description: 是否必须邀请码（兼容旧字段）
+        type: boolean
+    type: object
+  config.QuotaConfig:
+    properties:
+      defaultLevel:
+        type: integer
+      levelLimits:
+        additionalProperties:
+          $ref: '#/definitions/github_com_oneclickvirt_server_model_config.LevelLimitInfo'
+        type: object
+    type: object
+  config.UnifiedConfigRequest:
+    properties:
+      config:
+        additionalProperties: true
+        type: object
+      scope:
+        description: public, user, admin
+        type: string
+    required:
+    - config
+    - scope
+    type: object
+  config.UpdateConfigRequest:
+    properties:
+      auth:
+        $ref: '#/definitions/config.AuthConfig'
+      inviteCode:
+        $ref: '#/definitions/config.InviteCodeConfig'
+      quota:
+        $ref: '#/definitions/config.QuotaConfig'
+    type: object
+  config.UploadConfig:
+    properties:
+      allowed_types:
+        items:
+          type: string
+        type: array
+      cleanup_interval:
+        description: 存储配置
+        type: integer
+      denied_exts:
+        items:
+          type: string
+        type: array
+      enable_security_scan:
+        description: 安全配置
+        type: boolean
+      max_avatar_size:
+        description: 基础配置
+        type: integer
+      max_file_size:
+        type: integer
+      retention_days:
+        description: 文件保留天数
+        type: integer
+      upload_dir:
+        type: string
+    type: object
+  github_com_oneclickvirt_server_model_config.LevelLimitInfo:
+    properties:
+      maxInstances:
+        type: integer
+      maxResources:
+        additionalProperties: true
+        type: object
+    type: object
+  model.Api:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      group:
+        type: string
+      id:
+        type: integer
+      method:
+        type: string
+      path:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/model.Role'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  model.Instance:
+    properties:
+      bandwidth:
+        description: 网络带宽（Mbps）
+        type: integer
+      cpu:
+        type: integer
+      createdAt:
+        type: string
+      disk:
+        description: 磁盘大小（MB）
+        type: integer
+      expiredAt:
+        description: 到期时间
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      instance_type:
+        type: string
+      ip:
+        type: string
+      ipAddress:
+        description: 公网IP
+        type: string
+      memory:
+        description: 内存大小（MB）
+        type: integer
+      name:
+        type: string
+      network:
+        type: string
+      osType:
+        description: 操作系统类型
+        type: string
+      password:
+        description: 登录密码
+        type: string
+      ports:
+        items:
+          $ref: '#/definitions/model.Port'
+        type: array
+      provider:
+        allOf:
+        - $ref: '#/definitions/model.Provider'
+        description: 关联到Provider
+      providerId:
+        description: 改为uint类型，关联到providers表
+        type: integer
+      region:
+        type: string
+      softDeleted:
+        type: boolean
+      sshPort:
+        description: SSH端口
+        type: integer
+      status:
+        type: string
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+      userId:
+        type: integer
+      username:
+        description: 登录用户名
+        type: string
+      uuid:
+        type: string
+    type: object
+  model.Menu:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/model.Menu'
+        type: array
+      component:
+        type: string
+      createdAt:
+        type: string
+      hidden:
+        type: boolean
+      icon:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      parentId:
+        description: 改为可空指针，避免外键约束问题
+        type: integer
+      path:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/model.Role'
+        type: array
+      sort:
+        type: integer
+      status:
+        type: integer
+      title:
+        type: string
+      type:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  model.Port:
+    properties:
+      createdAt:
+        type: string
+      guestPort:
+        type: integer
+      hostPort:
+        type: integer
+      id:
+        type: integer
+      instance:
+        $ref: '#/definitions/model.Instance'
+      instanceId:
+        type: integer
+      protocol:
+        type: string
+      status:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  model.Provider:
+    properties:
+      allowClaim:
+        type: boolean
+      apiStatus:
+        description: 'API连接状态: online, offline, unknown'
+        type: string
+      architecture:
+        description: 架构字段
+        type: string
+      autoConfigured:
+        description: 是否已自动配置
+        type: boolean
+      availableCpuCores:
+        description: 可用资源统计（动态计算）
+        type: integer
+      availableMemory:
+        description: 可用内存（MB）
+        type: integer
+      caCertPath:
+        description: CA证书路径
+        type: string
+      certFingerprint:
+        description: 证书指纹
+        type: string
+      certPath:
+        description: 证书相关字段
+        type: string
+      config:
+        type: string
+      configBackupPath:
+        description: 配置备份文件路径
+        type: string
+      configVersion:
+        description: 配置版本号
+        type: integer
+      container_enabled:
+        type: boolean
+      containerCount:
+        description: 当前容器数量
+        type: integer
+      country:
+        type: string
+      countryCode:
+        type: string
+      createdAt:
+        type: string
+      endpoint:
+        type: string
+      expiresAt:
+        description: 过期时间
+        type: string
+      id:
+        type: integer
+      isFrozen:
+        description: 是否冻结
+        type: boolean
+      keyPath:
+        description: 客户端私钥路径
+        type: string
+      lastApiCheck:
+        description: 最后API检查时间
+        type: string
+      lastConfigUpdate:
+        description: 最后配置更新时间
+        type: string
+      lastSshCheck:
+        description: 最后SSH检查时间
+        type: string
+      maxContainerInstances:
+        description: 实例限制配置
+        type: integer
+      maxVMInstances:
+        description: 最大虚拟机数量限制，0表示无限制
+        type: integer
+      name:
+        type: string
+      nodeCpuCores:
+        description: 节点资源信息（基于当前实例统计，而非SSH查询）
+        type: integer
+      nodeDiskTotal:
+        description: 节点总磁盘空间（MB）
+        type: integer
+      nodeMemoryTotal:
+        description: 节点总内存（MB）
+        type: integer
+      region:
+        type: string
+      resourceSynced:
+        description: 资源信息是否已同步
+        type: boolean
+      resourceSyncedAt:
+        description: 资源信息同步时间
+        type: string
+      sshPort:
+        description: SSH端口
+        type: integer
+      sshStatus:
+        description: 'SSH连接状态: online, offline, unknown'
+        type: string
+      status:
+        type: string
+      supported_types:
+        type: string
+      totalQuota:
+        description: 总配额
+        type: integer
+      type:
+        type: string
+      updatedAt:
+        type: string
+      usedCpuCores:
+        description: 资源占用统计（基于实例计算）
+        type: integer
+      usedDisk:
+        description: 已占用磁盘（MB）
+        type: integer
+      usedInstances:
+        description: 已使用实例数
+        type: integer
+      usedMemory:
+        description: 已占用内存（MB）
+        type: integer
+      usedQuota:
+        description: 已使用配额
+        type: integer
+      username:
+        type: string
+      uuid:
+        type: string
+      vm_enabled:
+        type: boolean
+      vmCount:
+        description: 当前虚拟机数量
+        type: integer
+    type: object
+  model.ResourceReservation:
+    properties:
+      bandwidth:
+        description: 预留的带宽(Mbps)
+        type: integer
+      consumedAt:
+        description: 资源消费时间（实例创建成功）
+        type: string
+      cpu:
+        description: 预留的CPU核心数
+        type: integer
+      createdAt:
+        type: string
+      disk:
+        description: 预留的磁盘(MB)
+        type: integer
+      expiresAt:
+        description: 预留过期时间
+        type: string
+      id:
+        type: integer
+      instanceType:
+        description: container 或 vm
+        type: string
+      memory:
+        description: 预留的内存(MB)
+        type: integer
+      provider:
+        allOf:
+        - $ref: '#/definitions/model.Provider'
+        description: 关联Provider
+      providerId:
+        description: Provider ID
+        type: integer
+      releasedAt:
+        description: 资源释放时间（任务失败或取消）
+        type: string
+      status:
+        description: reserved, consumed, released, expired
+        type: string
+      task:
+        allOf:
+        - $ref: '#/definitions/model.Task'
+        description: 关联任务
+      taskId:
+        description: 关联的任务ID
+        type: integer
+      updatedAt:
+        type: string
+      user:
+        allOf:
+        - $ref: '#/definitions/model.User'
+        description: 关联用户
+      userId:
+        description: 用户ID
+        type: integer
+      uuid:
+        type: string
+    type: object
+  model.Role:
+    properties:
+      apis:
+        items:
+          $ref: '#/definitions/model.Api'
+        type: array
+      code:
+        description: 用于业务逻辑识别
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      displayName:
+        type: string
+      id:
+        type: integer
+      menus:
+        items:
+          $ref: '#/definitions/model.Menu'
+        type: array
+      name:
+        type: string
+      remark:
+        description: 备注字段
+        type: string
+      sort:
+        type: integer
+      status:
+        type: integer
+      updatedAt:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+    type: object
+  model.Task:
+    properties:
+      canForceStop:
+        description: 是否可以强制停止（仅管理员）
+        type: boolean
+      completedAt:
+        description: 完成时间
+        type: string
+      createdAt:
+        type: string
+      errorMessage:
+        description: 错误信息
+        type: string
+      estimatedDuration:
+        description: 预计耗时（秒）
+        type: integer
+      id:
+        type: integer
+      instance:
+        $ref: '#/definitions/model.Instance'
+      instanceId:
+        description: 关联的实例ID（可选）
+        type: integer
+      isForceStoppable:
+        description: 是否允许强制停止
+        type: boolean
+      progress:
+        description: 进度百分比
+        type: integer
+      provider:
+        $ref: '#/definitions/model.Provider'
+      providerId:
+        description: 任务所属节点，可为空
+        type: integer
+      startedAt:
+        description: 开始时间
+        type: string
+      status:
+        description: pending, running, completed, failed, cancelled, timeout
+        type: string
+      statusMessage:
+        description: 状态描述
+        type: string
+      taskData:
+        description: 任务数据JSON
+        type: string
+      taskType:
+        description: create, start, stop, restart, reset, delete
+        type: string
+      timeoutDuration:
+        description: 超时时间（秒，默认30分钟）
+        type: integer
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+      userId:
+        description: 任务所属用户
+        type: integer
+      uuid:
+        type: string
+    type: object
+  model.User:
+    properties:
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      instances:
+        items:
+          $ref: '#/definitions/model.Instance'
+        type: array
+      inviteCode:
+        type: string
+      level:
+        description: 用户等级，统一使用此字段
+        type: integer
+      nickname:
+        type: string
+      phone:
+        type: string
+      qq:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/model.Role'
+        type: array
+      status:
+        description: 0=禁用（不可登录），1=正常
+        type: integer
+      telegram:
+        type: string
+      totalQuota:
+        description: 总配额（传统系统兼容字段）
+        type: integer
+      updatedAt:
+        type: string
+      usedQuota:
+        description: 已使用配额（传统系统兼容字段）
+        type: integer
+      userType:
+        type: string
+      username:
+        type: string
+      uuid:
+        type: string
+    type: object
+  user.AvailableProviderResponse:
+    properties:
+      availableSlots:
+        type: integer
+      containerEnabled:
+        type: boolean
+      country:
+        type: string
+      countryCode:
+        type: string
+      cpu:
+        type: integer
+      cpuUsage:
+        type: number
+      disk:
+        description: 总硬盘空间(MB)
+        type: integer
+      id:
+        type: integer
+      location:
+        type: string
+      memory:
+        description: 总内存(MB)
+        type: integer
+      memoryUsage:
+        type: number
+      name:
+        type: string
+      region:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+      vmEnabled:
+        type: boolean
+    type: object
+  user.BandwidthSpecResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      speedMbps:
+        type: integer
+    type: object
+  user.CPUSpecResponse:
+    properties:
+      cores:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  user.ChangePasswordRequest:
+    properties:
+      newPassword:
+        type: string
+      oldPassword:
+        type: string
+    required:
+    - newPassword
+    - oldPassword
+    type: object
+  user.ClaimResourceRequest:
+    properties:
+      cpu:
+        type: integer
+      disk:
+        type: integer
+      image:
+        type: string
+      instanceType:
+        type: string
+      memory:
+        type: integer
+      name:
+        type: string
+      providerId:
+        type: integer
+    required:
+    - image
+    - instanceType
+    - name
+    - providerId
+    type: object
+  user.CreateInstanceRequest:
+    properties:
+      bandwidthId:
+        description: 带宽规格ID
+        type: string
+      cpuId:
+        description: CPU规格ID
+        type: string
+      description:
+        description: 描述信息
+        type: string
+      diskId:
+        description: 磁盘规格ID
+        type: string
+      imageId:
+        description: 镜像ID（从数据库获取）
+        type: integer
+      memoryId:
+        description: 内存规格ID
+        type: string
+      providerId:
+        description: 节点ID
+        type: integer
+    required:
+    - bandwidthId
+    - cpuId
+    - diskId
+    - imageId
+    - memoryId
+    - providerId
+    type: object
+  user.DiskSpecResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      sizeMB:
+        type: integer
+    type: object
+  user.InstanceActionRequest:
+    properties:
+      action:
+        type: string
+      instanceId:
+        type: integer
+    required:
+    - action
+    - instanceId
+    type: object
+  user.InstanceConfigResponse:
+    properties:
+      bandwidthSpecs:
+        description: 可用带宽规格列表
+        items:
+          $ref: '#/definitions/user.BandwidthSpecResponse'
+        type: array
+      cpuSpecs:
+        description: 可用CPU规格列表
+        items:
+          $ref: '#/definitions/user.CPUSpecResponse'
+        type: array
+      diskSpecs:
+        description: 可用磁盘规格列表
+        items:
+          $ref: '#/definitions/user.DiskSpecResponse'
+        type: array
+      images:
+        description: 可用镜像列表（从数据库获取）
+        items:
+          $ref: '#/definitions/user.SystemImageResponse'
+        type: array
+      memorySpecs:
+        description: 可用内存规格列表
+        items:
+          $ref: '#/definitions/user.MemorySpecResponse'
+        type: array
+    type: object
+  user.MemorySpecResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      sizeMB:
+        type: integer
+    type: object
+  user.ResetPasswordRequest:
+    type: object
+  user.SystemImageResponse:
+    properties:
+      architecture:
+        type: string
+      description:
+        type: string
+      displayName:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      instanceType:
+        type: string
+      isActive:
+        type: boolean
+      name:
+        type: string
+      osType:
+        type: string
+      providerType:
+        type: string
+      version:
+        type: string
+    type: object
+  user.UpdateProfileRequest:
+    properties:
+      email:
+        type: string
+      nickname:
+        type: string
+      phone:
+        type: string
+      telegram:
+        type: string
+    type: object
+  user.UserLimitsResponse:
+    properties:
+      level:
+        type: integer
+      maxBandwidth:
+        description: 最大带宽(Mbps)
+        type: integer
+      maxCpu:
+        description: 最大CPU核心数
+        type: integer
+      maxDisk:
+        description: 最大磁盘(MB)
+        type: integer
+      maxInstances:
+        type: integer
+      maxMemory:
+        description: 最大内存(MB)
+        type: integer
+      usedBandwidth:
+        description: 已使用带宽(Mbps)
+        type: integer
+      usedCpu:
+        description: 已使用CPU核心数
+        type: integer
+      usedDisk:
+        description: 已使用磁盘(MB)
+        type: integer
+      usedInstances:
+        type: integer
+      usedMemory:
+        description: 已使用内存(MB)
+        type: integer
+    type: object
+  v1.CPUStats:
+    properties:
+      cores:
+        description: CPU核心数
+        type: integer
+      load_avg_1:
+        description: 1分钟负载平均值
+        type: number
+      load_avg_5:
+        description: 5分钟负载平均值
+        type: number
+      load_avg_15:
+        description: 15分钟负载平均值
+        type: number
+      usage:
+        description: CPU使用率
+        type: number
+    type: object
+  v1.CreateSystemImageRequest:
+    properties:
+      architecture:
+        enum:
+        - amd64
+        - arm64
+        - s390x
+        type: string
+      checksum:
+        type: string
+      description:
+        type: string
+      instanceType:
+        enum:
+        - vm
+        - container
+        type: string
+      name:
+        type: string
+      osType:
+        type: string
+      osVersion:
+        type: string
+      providerType:
+        enum:
+        - proxmox
+        - lxd
+        - incus
+        - docker
+        type: string
+      size:
+        type: integer
+      tags:
+        type: string
+      url:
+        type: string
+    required:
+    - architecture
+    - instanceType
+    - name
+    - providerType
+    - url
+    type: object
+  v1.DatabaseStats:
+    properties:
+      connections:
+        description: 当前连接数
+        type: integer
+      max_connections:
+        description: 最大连接数
+        type: integer
+      queries_total:
+        description: 总查询数
+        type: integer
+      slow_queries:
+        description: 慢查询数
+        type: integer
+      uptime:
+        description: 运行时间
+        type: string
+    type: object
+  v1.DiskStats:
+    properties:
+      free:
+        description: 磁盘空闲
+        type: integer
+      total:
+        description: 磁盘总大小
+        type: integer
+      usage:
+        description: 磁盘使用率
+        type: number
+      used:
+        description: 磁盘已使用
+        type: integer
+    type: object
+  v1.MemoryStats:
+    properties:
+      free:
+        description: 空闲内存
+        type: integer
+      swap_total:
+        description: 交换分区总大小
+        type: integer
+      swap_used:
+        description: 交换分区已使用
+        type: integer
+      total:
+        description: 总内存
+        type: integer
+      usage:
+        description: 内存使用率
+        type: number
+      used:
+        description: 已使用内存
+        type: integer
+    type: object
+  v1.NetworkStats:
+    properties:
+      bytes_received:
+        description: 接收字节数
+        type: integer
+      bytes_sent:
+        description: 发送字节数
+        type: integer
+      packets_recv:
+        description: 接收包数
+        type: integer
+      packets_sent:
+        description: 发送包数
+        type: integer
+    type: object
+  v1.RuntimeStats:
+    properties:
+      gc_cycles:
+        description: GC循环次数
+        type: integer
+      goroutines:
+        description: 协程数量
+        type: integer
+      heap_alloc:
+        description: 堆内存分配
+        type: integer
+      heap_idle:
+        description: 堆内存空闲
+        type: integer
+      heap_inuse:
+        description: 堆内存使用中
+        type: integer
+      heap_sys:
+        description: 堆内存系统
+        type: integer
+      last_gc:
+        description: 最后GC时间
+        type: string
+      uptime:
+        description: 运行时间
+        type: string
+    type: object
+  v1.SystemStats:
+    properties:
+      cpu:
+        $ref: '#/definitions/v1.CPUStats'
+      database:
+        $ref: '#/definitions/v1.DatabaseStats'
+      disk:
+        $ref: '#/definitions/v1.DiskStats'
+      memory:
+        $ref: '#/definitions/v1.MemoryStats'
+      network:
+        $ref: '#/definitions/v1.NetworkStats'
+      runtime:
+        $ref: '#/definitions/v1.RuntimeStats'
+      timestamp:
+        type: string
+    type: object
+host: localhost:8888
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: 一键虚拟化管理平台API接口文档
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: OneClickVirt API
+  version: "1.0"
+paths:
+  /admin/announcements:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统公告列表（分页）
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取公告列表
+      tags:
+      - 管理员管理
+    post:
+      consumes:
+      - application/json
+      description: 管理员创建新公告
+      parameters:
+      - description: 创建公告请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.CreateAnnouncementRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 创建失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建公告
+      tags:
+      - 管理员管理
+  /admin/announcements/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 管理员删除公告
+      parameters:
+      - description: 公告ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 删除失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除公告
+      tags:
+      - 管理员管理
+    put:
+      consumes:
+      - application/json
+      description: 管理员更新公告信息
+      parameters:
+      - description: 公告ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新公告请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.UpdateAnnouncementRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新公告
+      tags:
+      - 管理员管理
+  /admin/announcements/batch-delete:
+    delete:
+      consumes:
+      - application/json
+      description: 管理员批量删除公告
+      parameters:
+      - description: 批量操作请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.BatchAnnouncementRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 删除失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 批量删除公告
+      tags:
+      - 管理员管理
+  /admin/announcements/batch-status:
+    put:
+      consumes:
+      - application/json
+      description: 管理员批量更新公告状态
+      parameters:
+      - description: 批量状态更新请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.BatchUpdateStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 批量更新公告状态
+      tags:
+      - 管理员管理
+  /admin/config:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统的配置列表
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取系统配置
+      tags:
+      - 系统管理
+    put:
+      consumes:
+      - application/json
+      description: 更新系统的配置参数
+      parameters:
+      - description: 更新配置请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.UpdateSystemConfigRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新系统配置
+      tags:
+      - 系统管理
+  /admin/configuration-tasks:
+    get:
+      consumes:
+      - application/json
+      description: 获取配置任务列表，支持分页和筛选
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 页大小
+        in: query
+        name: pageSize
+        type: integer
+      - description: Provider ID
+        in: query
+        name: providerId
+        type: integer
+      - description: 任务类型
+        in: query
+        name: taskType
+        type: string
+      - description: 任务状态
+        in: query
+        name: status
+        type: string
+      - description: 执行者ID
+        in: query
+        name: executorId
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.ConfigurationTaskListResponse'
+              type: object
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取配置任务列表
+      tags:
+      - 管理员管理
+  /admin/configuration-tasks/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定配置任务的详细信息，包括完整日志
+      parameters:
+      - description: 任务ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.ConfigurationTaskDetailResponse'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "404":
+          description: 任务不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取配置任务详情
+      tags:
+      - 管理员管理
+  /admin/configuration-tasks/{id}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: 取消正在运行的配置任务
+      parameters:
+      - description: 任务ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 取消成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "404":
+          description: 任务不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 取消失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 取消配置任务
+      tags:
+      - 管理员管理
+  /admin/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: 获取管理员后台首页的统计数据
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取管理员仪表板
+      tags:
+      - 管理员管理
+  /admin/database/stats:
+    get:
+      description: 获取详细的数据库连接池统计信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 数据库统计信息
+      tags:
+      - Health
+  /admin/instance-type-permissions:
+    get:
+      consumes:
+      - application/json
+      description: 管理员获取实例类型最低等级要求配置
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取实例类型权限配置
+      tags:
+      - 管理员管理
+    put:
+      consumes:
+      - application/json
+      description: 管理员更新实例类型最低等级要求配置
+      parameters:
+      - description: 权限配置参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.UpdateInstanceTypePermissionsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新实例类型权限配置
+      tags:
+      - 管理员管理
+  /admin/instances:
+    get:
+      consumes:
+      - application/json
+      description: 管理员获取系统中所有实例的列表，支持分页和过滤
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 实例状态
+        in: query
+        name: status
+        type: string
+      - description: 提供商筛选
+        in: query
+        name: provider
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取实例列表
+      tags:
+      - 管理员管理
+    post:
+      consumes:
+      - application/json
+      description: 管理员创建新的虚拟化实例
+      parameters:
+      - description: 创建实例请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.CreateInstanceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建实例
+      tags:
+      - 管理员管理
+  /admin/invite-codes:
+    get:
+      consumes:
+      - application/json
+      description: 管理员获取系统中的邀请码列表，支持分页和查询
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 搜索关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 状态筛选
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取邀请码列表
+      tags:
+      - 邀请码管理
+    post:
+      consumes:
+      - application/json
+      description: 管理员创建新的邀请码
+      parameters:
+      - description: 创建邀请码请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.CreateInviteCodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建邀请码
+      tags:
+      - 邀请码管理
+  /admin/invite-codes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 管理员删除指定的邀请码
+      parameters:
+      - description: 邀请码ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除邀请码
+      tags:
+      - 邀请码管理
+  /admin/invite-codes/generate:
+    post:
+      consumes:
+      - application/json
+      description: 管理员批量生成邀请码，可指定数量和权限等级
+      parameters:
+      - description: 生成邀请码请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.CreateInviteCodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 生成成功，返回邀请码列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 批量生成邀请码
+      tags:
+      - 邀请码管理
+  /admin/monitoring/health:
+    get:
+      consumes:
+      - application/json
+      description: 检查系统各个组件的健康状态
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 检查成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "500":
+          description: 检查失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 系统健康检查
+      tags:
+      - 系统监控
+  /admin/monitoring/instances:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有实例的监控和状态数据
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 获取实例监控数据
+      tags:
+      - 系统监控
+  /admin/monitoring/metrics:
+    get:
+      consumes:
+      - application/json
+      description: 返回Prometheus格式的系统监控指标数据
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Prometheus格式的指标数据
+          schema:
+            type: string
+        "401":
+          description: 认证失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取Prometheus指标
+      tags:
+      - 系统监控
+  /admin/monitoring/providers:
+    get:
+      consumes:
+      - application/json
+      description: 获取节点的监控和性能数据
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 获取节点监控数据
+      tags:
+      - 系统监控
+  /admin/monitoring/system:
+    get:
+      consumes:
+      - application/json
+      description: 获取服务器的CPU、内存、磁盘、网络等系统资源使用情况
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.SystemStats'
+              type: object
+        "401":
+          description: 认证失败
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取系统统计信息
+      tags:
+      - 系统监控
+  /admin/providers:
+    get:
+      consumes:
+      - application/json
+      description: 管理员获取系统中的虚拟化提供商列表，支持分页和查询
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 搜索关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 提供商类型筛选
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取提供商列表
+      tags:
+      - 提供商管理
+    post:
+      consumes:
+      - application/json
+      description: 管理员创建新的虚拟化提供商配置
+      parameters:
+      - description: 创建提供商请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.CreateProviderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建提供商
+      tags:
+      - 提供商管理
+  /admin/providers/{id}/auto-configure-stream:
+    post:
+      consumes:
+      - application/json
+      description: 使用Server-Sent Events实时显示配置过程和输出
+      parameters:
+      - description: Provider ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: 实时配置输出
+          schema:
+            type: string
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 配置失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 实时自动配置Provider
+      tags:
+      - 管理员管理
+  /admin/providers/{id}/generate-cert:
+    post:
+      consumes:
+      - application/json
+      description: 为LXD/Incus Provider生成客户端证书和设置脚本，为Proxmox VE生成API Token配置脚本
+      parameters:
+      - description: Provider ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 生成成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 生成失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 为Provider生成证书或配置
+      tags:
+      - 管理员管理
+  /admin/providers/{id}/health-check:
+    post:
+      consumes:
+      - application/json
+      description: 检查Provider的API和SSH连接状态
+      parameters:
+      - description: Provider ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 检查成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.ProviderStatusResponse'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 检查失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 检查Provider健康状态
+      tags:
+      - 管理员管理
+  /admin/providers/{id}/status:
+    get:
+      consumes:
+      - application/json
+      description: 获取Provider的详细状态信息，包括证书信息
+      parameters:
+      - description: Provider ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.ProviderStatusResponse'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取Provider状态详情
+      tags:
+      - 管理员管理
+  /admin/providers/auto-configure:
+    post:
+      consumes:
+      - application/json
+      description: 自动配置Provider，支持检查历史记录和防重复执行
+      parameters:
+      - description: 自动配置请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.AutoConfigureRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 配置响应
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.AutoConfigureResponse'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 配置失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 自动配置Provider
+      tags:
+      - 管理员管理
+  /admin/providers/export-configs:
+    post:
+      consumes:
+      - application/json
+      description: 导出所有已配置的Provider认证信息到文件
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 导出成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 导出失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 导出所有Provider配置
+      tags:
+      - 管理员管理
+  /admin/system-images:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统镜像列表，支持分页和过滤条件
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 提供商类型
+        enum:
+        - proxmox
+        - lxd
+        - incus
+        - docker
+        in: query
+        name: providerType
+        type: string
+      - description: 实例类型
+        enum:
+        - vm
+        - container
+        in: query
+        name: instanceType
+        type: string
+      - description: 架构
+        enum:
+        - amd64
+        - arm64
+        - s390x
+        in: query
+        name: architecture
+        type: string
+      - description: 状态
+        enum:
+        - active
+        - inactive
+        in: query
+        name: status
+        type: string
+      - description: 搜索关键字
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取系统镜像列表
+      tags:
+      - 系统镜像管理
+    post:
+      consumes:
+      - application/json
+      description: 创建新的系统镜像配置
+      parameters:
+      - description: 创建系统镜像请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/v1.CreateSystemImageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 认证失败
+          schema:
+            $ref: '#/definitions/common.Response'
+        "409":
+          description: 镜像名称已存在
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建系统镜像
+      tags:
+      - 系统镜像管理
+  /admin/tasks:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有用户的任务列表，支持分页和筛选
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 页大小
+        in: query
+        name: pageSize
+        type: integer
+      - description: Provider ID
+        in: query
+        name: providerId
+        type: integer
+      - description: 用户ID
+        in: query
+        name: userId
+        type: integer
+      - description: 任务类型
+        in: query
+        name: taskType
+        type: string
+      - description: 任务状态
+        in: query
+        name: status
+        type: string
+      - description: 实例类型
+        in: query
+        name: instanceType
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.AdminTaskListResponse'
+              type: object
+        "401":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取管理员任务列表
+      tags:
+      - 管理员管理
+  /admin/tasks/{taskId}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: 管理员取消指定用户的任务
+      parameters:
+      - description: 任务ID
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 操作失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 管理员取消用户任务
+      tags:
+      - 管理员管理
+  /admin/tasks/force-stop:
+    post:
+      consumes:
+      - application/json
+      description: 管理员强制停止运行中的任务
+      parameters:
+      - description: 强制停止任务请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.ForceStopTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 操作失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 强制停止任务
+      tags:
+      - 管理员管理
+  /admin/tasks/stats:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统任务统计信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.TaskStatsResponse'
+              type: object
+        "401":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取任务统计
+      tags:
+      - 管理员管理
+  /admin/upload/cleanup:
+    post:
+      consumes:
+      - application/json
+      description: 立即执行过期文件清理（排除头像文件）
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 清理成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 清理失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 清理过期文件
+      tags:
+      - 上传管理
+  /admin/upload/config:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前的文件上传配置信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/config.UploadConfig'
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取文件上传配置
+      tags:
+      - 上传管理
+    put:
+      consumes:
+      - application/json
+      description: 更新文件上传相关配置
+      parameters:
+      - description: 上传配置
+        in: body
+        name: config
+        required: true
+        schema:
+          $ref: '#/definitions/config.UploadConfig'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新文件上传配置
+      tags:
+      - 上传管理
+  /admin/upload/stats:
+    get:
+      consumes:
+      - application/json
+      description: 获取文件上传相关统计数据
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取上传统计信息
+      tags:
+      - 上传管理
+  /admin/users:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统中所有用户的列表（分页）
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 用户名搜索
+        in: query
+        name: username
+        type: string
+      - description: 邮箱搜索
+        in: query
+        name: email
+        type: string
+      - description: 用户状态
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户列表
+      tags:
+      - 管理员管理
+    post:
+      consumes:
+      - application/json
+      description: 管理员创建新用户账户
+      parameters:
+      - description: 创建用户请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 创建失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建用户
+      tags:
+      - 管理员管理
+  /admin/users/{id}/level:
+    put:
+      consumes:
+      - application/json
+      description: 管理员更新指定用户的等级
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新用户等级请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.UpdateUserLevelRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新用户等级
+      tags:
+      - 管理员管理
+  /admin/users/{id}/reset-password:
+    put:
+      consumes:
+      - application/json
+      description: 管理员强制重置指定用户的登录密码，系统自动生成符合安全策略的新密码
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 重置密码请求参数（可为空对象）
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.ResetUserPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 重置成功，返回新密码
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.ResetUserPasswordResponse'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "404":
+          description: 用户不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 重置失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 管理员强制重置用户密码
+      tags:
+      - 管理员管理
+  /admin/users/{id}/reset-password-notify:
+    put:
+      consumes:
+      - application/json
+      description: 管理员重置指定用户的登录密码，系统自动生成符合安全策略的新密码并发送到用户绑定的通信渠道
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 重置密码请求参数（可为空对象）
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.ResetUserPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 重置成功，新密码已发送到用户绑定的通信渠道
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "404":
+          description: 用户不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 重置失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 管理员重置用户密码并发送到用户通信渠道
+      tags:
+      - 管理员管理
+  /admin/users/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: 管理员更新用户状态（启用/禁用）
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新用户状态请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.UpdateUserStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新用户状态
+      tags:
+      - 管理员管理
+  /admin/users/batch-delete:
+    post:
+      consumes:
+      - application/json
+      description: 管理员批量删除用户
+      parameters:
+      - description: 批量删除用户请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.BatchDeleteUsersRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 删除失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 管理员批量删除用户
+      tags:
+      - 管理员管理
+  /admin/users/batch-level:
+    put:
+      consumes:
+      - application/json
+      description: 管理员批量更新多个用户的等级
+      parameters:
+      - description: 批量更新用户等级请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.BatchUpdateUserLevelRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 批量更新用户等级
+      tags:
+      - 管理员管理
+  /admin/users/batch-status:
+    put:
+      consumes:
+      - application/json
+      description: 管理员批量更新用户状态（启用/禁用）
+      parameters:
+      - description: 批量更新用户状态请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.BatchUpdateUserStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 管理员批量更新用户状态
+      tags:
+      - 管理员管理
+  /api/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除API接口记录
+      parameters:
+      - description: API ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除API接口
+      tags:
+      - API管理
+    put:
+      consumes:
+      - application/json
+      description: 更新API接口信息
+      parameters:
+      - description: API ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新API请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新API接口
+      tags:
+      - API管理
+  /api/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建新的API接口记录
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建API接口
+      tags:
+      - API管理
+  /api/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统的API接口列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 获取API列表
+      tags:
+      - API管理
+  /api/v1/admin/monitoring/audit-logs:
+    get:
+      consumes:
+      - application/json
+      description: 获取用户操作审计日志
+      parameters:
+      - description: 用户ID
+        in: query
+        name: user_id
+        type: integer
+      - description: 操作类型
+        in: query
+        name: action
+        type: string
+      - description: 开始时间
+        in: query
+        name: start_time
+        type: string
+      - description: 结束时间
+        in: query
+        name: end_time
+        type: string
+      - default: 100
+        description: 返回条数
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取操作审计日志
+      tags:
+      - 管理员管理
+  /api/v1/admin/monitoring/logs:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统运行日志
+      parameters:
+      - description: 日志级别
+        enum:
+        - info
+        - warn
+        - error
+        - debug
+        in: query
+        name: level
+        type: string
+      - default: 100
+        description: 返回条数
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取系统日志
+      tags:
+      - 监控管理
+  /apis/routes:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前系统的所有路由信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items: {}
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 获取路由信息
+      tags:
+      - API管理
+  /apis/sync:
+    post:
+      consumes:
+      - application/json
+      description: 从路由中自动发现并同步API接口到数据库
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 同步成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 同步API接口
+      tags:
+      - API管理
+  /auth/captcha:
+    get:
+      consumes:
+      - application/json
+      description: 生成图片验证码用于用户验证
+      parameters:
+      - default: 120
+        description: 验证码宽度
+        in: query
+        name: width
+        type: integer
+      - default: 40
+        description: 验证码高度
+        in: query
+        name: height
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 验证码生成成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取验证码
+      tags:
+      - 认证管理
+  /auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: 发送密码重置邮件
+      parameters:
+      - description: 忘记密码请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ForgotPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 重置邮件发送成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 忘记密码
+      tags:
+      - 认证管理
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录接口，验证用户名密码并返回JWT token
+      parameters:
+      - description: 登录请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 认证失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 用户登录
+      tags:
+      - 认证管理
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: 撤销当前用户的JWT token并登出
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登出成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未认证
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 用户登出
+      tags:
+      - 认证管理
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: 创建新用户账户
+      parameters:
+      - description: 注册请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 注册成功，返回用户信息和token
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误或注册失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 用户注册
+      tags:
+      - 认证管理
+  /auth/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: 使用重置令牌自动生成新密码并通过用户绑定的通信渠道发送
+      parameters:
+      - description: 重置密码请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 密码重置成功，新密码已发送到绑定的通信渠道
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 重置密码
+      tags:
+      - 认证管理
+  /config:
+    get:
+      consumes:
+      - application/json
+      description: 根据用户权限返回相应的配置信息
+      parameters:
+      - default: user
+        description: 配置范围
+        enum:
+        - public
+        - user
+        - admin
+        in: query
+        name: scope
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data: {}
+              type: object
+        "401":
+          description: 认证失败
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取系统配置
+      tags:
+      - 配置管理
+    put:
+      consumes:
+      - application/json
+      description: 根据用户权限更新相应的配置信息
+      parameters:
+      - description: 配置更新请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/config.UnifiedConfigRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 认证失败
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新系统配置
+      tags:
+      - 配置管理
+  /dashboard/stats:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统总体统计信息，包括用户数、实例数等
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取仪表板统计数据
+      tags:
+      - 仪表板
+  /health:
+    get:
+      description: 检查数据库连接和系统状态
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+              type: object
+      summary: 系统健康检查
+      tags:
+      - Health
+  /permission/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统的权限列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 获取权限列表
+      tags:
+      - 权限管理
+  /provider/connect:
+    post:
+      consumes:
+      - application/json
+      description: 连接到虚拟化提供者（如Docker、LXD、Proxmox等）
+      parameters:
+      - description: 连接参数
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            cert_path:
+              type: string
+            container_enabled:
+              type: boolean
+            host:
+              type: string
+            key_path:
+              type: string
+            name:
+              type: string
+            password:
+              type: string
+            port:
+              type: integer
+            type:
+              type: string
+            username:
+              type: string
+            vm_enabled:
+              type: boolean
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 连接成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 连接失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 连接虚拟化Provider
+      tags:
+      - 虚拟化管理
+  /providers/:
+    get:
+      consumes:
+      - application/json
+      description: 获取系统中配置的所有虚拟化提供者
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    type: object
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 获取所有Provider
+      tags:
+      - 虚拟化管理
+  /providers/{type}/capabilities:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定类型虚拟化提供者支持的功能和实例类型
+      parameters:
+      - description: Provider类型
+        enum:
+        - docker
+        - lxd
+        - incus
+        - proxmox
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "404":
+          description: Provider不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取Provider能力
+      tags:
+      - 虚拟化管理
+  /providers/{type}/instances:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定Provider下的所有实例
+      parameters:
+      - description: Provider类型
+        enum:
+        - docker
+        - lxd
+        - incus
+        - proxmox
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "404":
+          description: Provider不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取实例列表
+      tags:
+      - 虚拟化管理
+    post:
+      consumes:
+      - application/json
+      description: 在指定Provider上创建新的虚拟机或容器实例
+      parameters:
+      - description: Provider类型
+        enum:
+        - docker
+        - lxd
+        - incus
+        - proxmox
+        in: path
+        name: type
+        required: true
+        type: string
+      - description: 创建实例请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "404":
+          description: Provider不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 创建失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建实例
+      tags:
+      - 虚拟化管理
+  /providers/{type}/status:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定类型虚拟化提供者的连接状态和支持的实例类型
+      parameters:
+      - description: Provider类型
+        enum:
+        - docker
+        - lxd
+        - incus
+        - proxmox
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "404":
+          description: Provider不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取Provider状态
+      tags:
+      - 虚拟化管理
+  /public/init:
+    post:
+      consumes:
+      - application/json
+      description: 进行系统的初始化设置，创建管理员和默认用户
+      parameters:
+      - description: 初始化请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 初始化成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误或系统已初始化
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 初始化失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 初始化系统
+      tags:
+      - 系统初始化
+  /public/init/check:
+    get:
+      consumes:
+      - application/json
+      description: 检查系统是否需要进行初始化设置
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 检查成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 检查系统初始化状态
+      tags:
+      - 系统初始化
+  /public/register-config:
+    get:
+      consumes:
+      - application/json
+      description: 获取注册页面所需的配置信息（不需要认证）
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: 获取注册配置信息
+      tags:
+      - 系统初始化
+  /static/{type}/{path}:
+    get:
+      description: 获取上传的静态文件（如头像）
+      parameters:
+      - description: 文件类型
+        enum:
+        - avatars
+        in: path
+        name: type
+        required: true
+        type: string
+      - description: 文件路径
+        in: path
+        name: path
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: 文件内容
+          schema:
+            type: file
+        "403":
+          description: 访问被拒绝
+          schema:
+            $ref: '#/definitions/common.Response'
+        "404":
+          description: 文件不存在
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 获取静态文件
+      tags:
+      - 文件访问
+  /upload/avatar:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 上传用户头像图片，支持JPG、PNG、WEBP格式，最大2MB
+      parameters:
+      - description: 头像文件
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 上传成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  properties:
+                    url:
+                      type: string
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "413":
+          description: 文件过大
+          schema:
+            $ref: '#/definitions/common.Response'
+        "415":
+          description: 文件类型不支持
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 上传用户头像
+      tags:
+      - 文件上传
+  /user/active-reservations:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户的所有活跃资源预留记录
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.ResourceReservation'
+                  type: array
+              type: object
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户的活跃资源预留
+      tags:
+      - 用户管理
+  /user/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前登录用户的仪表板数据
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户仪表板
+      tags:
+      - 用户管理
+  /user/images:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户可以使用的系统镜像列表，支持按Provider和实例类型过滤
+      parameters:
+      - description: Provider类型
+        in: query
+        name: providerType
+        type: string
+      - description: Provider ID
+        in: query
+        name: providerId
+        type: integer
+      - description: 实例类型
+        enum:
+        - container
+        - vm
+        in: query
+        name: instanceType
+        type: string
+      - description: 架构
+        in: query
+        name: architecture
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/user.SystemImageResponse'
+                  type: array
+              type: object
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取系统镜像列表
+      tags:
+      - 用户管理
+  /user/images/filtered:
+    get:
+      consumes:
+      - application/json
+      description: 根据Provider ID和实例类型获取匹配的系统镜像列表
+      parameters:
+      - description: Provider ID
+        in: query
+        name: provider_id
+        required: true
+        type: integer
+      - description: 实例类型
+        enum:
+        - container
+        - vm
+        in: query
+        name: instance_type
+        required: true
+        type: string
+      - description: 架构类型
+        enum:
+        - amd64
+        - arm64
+        in: query
+        name: architecture
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/user.SystemImageResponse'
+                  type: array
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取过滤后的系统镜像列表
+      tags:
+      - 用户管理
+  /user/info:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前登录用户的详细信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "401":
+          description: 用户未授权
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户信息
+      tags:
+      - 用户管理
+  /user/instance-config:
+    get:
+      consumes:
+      - application/json
+      description: 获取可用的镜像、规格等实例创建配置选项
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.InstanceConfigResponse'
+              type: object
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取实例配置选项
+      tags:
+      - 用户管理
+  /user/instance-type-permissions:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户可以创建的实例类型权限配置，基于用户配额和Provider能力
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取实例类型权限配置
+      tags:
+      - 用户管理
+  /user/instances:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户的所有实例
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 实例状态
+        in: query
+        name: status
+        type: string
+      - description: 实例类型
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 获取失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户实例列表
+      tags:
+      - 用户管理
+    post:
+      consumes:
+      - application/json
+      description: 用户创建新的虚拟机或容器实例（异步处理）
+      parameters:
+      - description: 创建实例请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateInstanceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 任务创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 创建失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建实例
+      tags:
+      - 用户管理
+  /user/instances/action:
+    post:
+      consumes:
+      - application/json
+      description: 对用户实例执行操作（启动、停止、重启等）
+      parameters:
+      - description: 实例操作请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.InstanceActionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 操作失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 实例操作
+      tags:
+      - 用户管理
+  /user/limits:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前登录用户的配额限制信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.UserLimitsResponse'
+              type: object
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户配额限制
+      tags:
+      - 用户管理
+  /user/password:
+    put:
+      consumes:
+      - application/json
+      description: 修改当前用户的登录密码
+      parameters:
+      - description: 修改密码请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 修改失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 修改密码
+      tags:
+      - 用户管理
+  /user/profile:
+    put:
+      consumes:
+      - application/json
+      description: 更新当前用户的个人资料信息
+      parameters:
+      - description: 更新个人信息请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 更新失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新个人信息
+      tags:
+      - 用户管理
+  /user/providers/{id}/capabilities:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定Provider支持的实例类型和架构信息
+      parameters:
+      - description: Provider ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取Provider能力信息
+      tags:
+      - 用户管理
+  /user/providers/available:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户可以申领的节点列表，根据资源使用情况筛选
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/user.AvailableProviderResponse'
+                  type: array
+              type: object
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取可用节点列表
+      tags:
+      - 用户管理
+  /user/reset-password:
+    put:
+      consumes:
+      - application/json
+      description: 用户重置自己的登录密码，系统自动生成符合安全策略的新密码，并通过绑定的通信渠道发送
+      parameters:
+      - description: 重置密码请求参数（可为空对象）
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 重置成功，新密码已发送到绑定的通信渠道
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 重置失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 用户重置自己的密码
+      tags:
+      - 用户管理
+  /user/resources/available:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户可以申领的资源列表
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 资源类型
+        in: query
+        name: resourceType
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取可申领资源
+      tags:
+      - 用户管理
+  /user/resources/claim:
+    post:
+      consumes:
+      - application/json
+      description: 用户申领可用的资源实例
+      parameters:
+      - description: 申领资源请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.ClaimResourceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 申领成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 申领失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 申领资源
+      tags:
+      - 用户管理
+  /user/roles:
+    get:
+      consumes:
+      - application/json
+      description: 获取用户的角色列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items: {}
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 获取用户角色列表
+      tags:
+      - 用户管理
+  /user/tasks:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户的任务列表
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 任务类型
+        in: query
+        name: taskType
+        type: string
+      - description: 任务状态
+        in: query
+        name: status
+        type: string
+      - description: 节点ID
+        in: query
+        name: providerId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户任务列表
+      tags:
+      - 用户管理
+  /user/tasks/{taskId}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: 用户取消自己的等待中任务
+      parameters:
+      - description: 任务ID
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: 用户未登录
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 操作失败
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 取消用户任务
+      tags:
+      - 用户管理
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

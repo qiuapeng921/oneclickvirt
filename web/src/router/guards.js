@@ -1,0 +1,150 @@
+import { useUserStore } from '@/pinia/modules/user'
+import { checkSystemInit } from '@/api/init'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+NProgress.configure({ showSpinner: false })
+
+export function setupRouterGuards(router) {
+  router.beforeEach(async (to, from, next) => {
+    NProgress.start()
+    
+    const userStore = useUserStore()
+    const token = userStore.token || sessionStorage.getItem('token')
+    
+    // 检查系统初始化状态（除了初始化页面本身）
+    if (to.name !== 'SystemInit') {
+      try {
+        const response = await checkSystemInit()
+        console.log('检查初始化状态响应:', response)
+        if (response && response.code === 0 && response.data && response.data.needInit === true) {
+          console.log('系统需要初始化，跳转到初始化页面')
+          next({ path: '/init' })
+          return
+        }
+      } catch (error) {
+        console.error('检查系统初始化状态失败:', error)
+        // 如果是网络错误或服务器错误，可能是数据库未初始化导致的
+        if (error.message.includes('Network Error') || 
+            error.response?.status >= 500 || 
+            error.code === 'ECONNREFUSED') {
+          console.warn('服务器连接失败，可能需要初始化，跳转到初始化页面')
+          next({ path: '/init' })
+          return
+        }
+        // 其他错误，允许继续访问，但在控制台记录错误
+        console.warn('初始化检查失败，允许继续访问页面')
+        // 不要阻塞，继续正常的路由逻辑
+      }
+    } else {
+      // 如果已经在初始化页面，检查是否还需要初始化
+      try {
+        const response = await checkSystemInit()
+        console.log('在初始化页面检查状态:', response)
+        if (response && response.code === 0 && response.data && response.data.needInit === false) {
+          console.log('系统已初始化，跳转到首页')
+          next({ path: '/home' })
+          return
+        }
+      } catch (error) {
+        console.error('在初始化页面检查系统初始化状态失败:', error)
+        // 如果检查失败，允许停留在初始化页面
+        console.warn('初始化页面状态检查失败，允许停留在初始化页面')
+      }
+    }
+    
+    const whiteList = ['/home', '/login', '/register', '/forgot-password', '/init', '/admin/login']
+    
+    if (whiteList.includes(to.path)) {
+      next()
+      return
+    }
+    
+    if (to.meta.requiresAuth || !whiteList.includes(to.path)) {
+      if (!token) {
+        console.log('需要认证但无token，跳转到首页')
+        next('/home')
+        return
+      }
+      
+      // 检查用户信息和状态
+      if (!userStore.user) {
+        try {
+          await userStore.fetchUserInfo()
+        } catch (error) {
+          console.error('获取用户信息失败:', error)
+          userStore.logout()
+          next('/home')
+          return
+        }
+      } else {
+        // 对于敏感操作页面，重新验证用户状态
+        const sensitivePages = ['/admin/', '/user/settings', '/user/security']
+        const isSensitivePage = sensitivePages.some(page => to.path.startsWith(page))
+        
+        if (isSensitivePage) {
+          try {
+            const isValid = await userStore.checkUserStatus()
+            if (!isValid) {
+              console.log('用户状态验证失败，跳转到首页')
+              next('/home')
+              return
+            }
+          } catch (error) {
+            console.error('用户状态验证失败:', error)
+            userStore.logout()
+            next('/home')
+            return
+          }
+        }
+      }
+      
+      if (to.meta.roles && to.meta.roles.length > 0) {
+        const userRole = userStore.userType
+        if (!to.meta.roles.includes(userRole)) {
+          console.log('用户角色不匹配，当前角色:', userRole, '需要角色:', to.meta.roles)
+          // 根据用户类型跳转到相应的首页，而不是404页面
+          if (userRole === 'admin') {
+            next('/admin/dashboard')
+          } else if (userRole === 'user') {
+            next('/user/dashboard')
+          } else {
+            next('/home')
+          }
+          return
+        }
+      }
+    }
+    
+    if (to.path === '/' && token) {
+      const userType = userStore.userType
+      if (userType === 'admin') {
+        next('/admin/dashboard')
+        return
+      } else if (userType === 'user') {
+        next('/user/dashboard')
+        return
+      }
+    } else if (to.path === '/' && !token) {
+      next('/home')
+      return
+    }
+    
+    next()
+  })
+  
+  router.afterEach((to, from) => {
+    NProgress.done()
+    document.title = to.meta.title ? `${to.meta.title} - OneClickVirt` : 'OneClickVirt'
+    
+    // 对于用户页面，确保每次导航都触发组件刷新
+    if (to.path.startsWith('/user/') && from.path !== to.path) {
+      // 延迟触发，确保组件已经挂载
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('force-page-refresh', { 
+          detail: { path: to.path, from: from.path } 
+        }))
+      }, 50)
+    }
+  })
+}

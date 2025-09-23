@@ -1,0 +1,916 @@
+<template>
+  <div class="home-container">
+    <!-- 导航栏 -->
+    <header class="home-header">
+      <div class="header-content">
+        <div class="logo">
+          <h1>OneClickVirt</h1>
+          <span>一键虚拟化平台</span>
+        </div>
+        <nav class="nav-menu">
+          <router-link
+            to="/login"
+            class="nav-link"
+          >
+            登录
+          </router-link>
+          <router-link
+            to="/register"
+            class="nav-link primary"
+          >
+            注册
+          </router-link>
+        </nav>
+      </div>
+    </header>
+    
+    <!-- 主要内容 -->
+    <main class="home-main">
+      <!-- 英雄区域 -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            开源虚拟化管理平台
+          </h1>
+          <p class="hero-description">
+            OneClickVirt 提供开源简单易用的虚拟机和容器管理，支持多种虚拟化开设。
+          </p>
+          <div class="hero-actions">
+            <router-link
+              to="/login"
+              class="btn btn-primary"
+            >
+              帐户登录
+            </router-link>
+            <router-link
+              to="/register"
+              class="btn btn-secondary"
+            >
+              注册使用
+            </router-link>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="feature-preview">
+            <div class="preview-card">
+              <div class="card-icon">
+                🖥️
+              </div>
+              <h3>虚拟机管理</h3>
+              <p>快速创建和管理虚拟机实例</p>
+            </div>
+            <div class="preview-card">
+              <div class="card-icon">
+                📦
+              </div>
+              <h3>容器管理</h3>
+              <p>快速创建和管理容器实例</p>
+            </div>
+            <div class="preview-card">
+              <div class="card-icon">
+                📊
+              </div>
+              <h3>监控面板</h3>
+              <p>实时监控资源使用情况</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 支持的虚拟化平台 -->
+      <section class="platforms-section">
+        <div class="section-header">
+          <h2>支持的虚拟化平台</h2>
+          <p>一键对接多种主流虚拟化技术</p>
+        </div>
+        <div class="platforms-grid">
+          <div class="platform-item">
+            <div class="platform-icon pve-icon">
+              <img
+                src="@/assets/images/proxmox.png"
+                alt="Proxmox VE"
+                width="60"
+                height="60"
+              >
+            </div>
+            <h3>Proxmox VE</h3>
+          </div>
+          
+          <div class="platform-item">
+            <div class="platform-icon incus-icon">
+              <img
+                src="@/assets/images/incus.png"
+                alt="Incus"
+                width="60"
+                height="60"
+              >
+            </div>
+            <h3>Incus</h3>
+          </div>
+          
+          <div class="platform-item">
+            <div class="platform-icon docker-icon">
+              <img
+                src="@/assets/images/docker.png"
+                alt="Docker"
+                width="60"
+                height="60"
+              >
+            </div>
+            <h3>Docker</h3>
+          </div>
+          
+          <div class="platform-item">
+            <div class="platform-icon lxd-icon">
+              <img
+                src="@/assets/images/lxd.png"
+                alt="LXD"
+                width="60"
+                height="60"
+              >
+            </div>
+            <h3>LXD</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- 系统公告 -->
+      <section
+        v-if="announcements.length > 0"
+        class="announcements-section"
+      >
+        <div class="section-header">
+          <h2>系统公告</h2>
+        </div>
+        <div class="announcements-list">
+          <div
+            v-for="announcement in announcements"
+            :key="announcement.id"
+            class="announcement-item"
+          >
+            <div class="announcement-header">
+              <h3>{{ announcement.title }}</h3>
+              <div class="announcement-meta">
+                <el-tag
+                  :type="announcement.type === 'homepage' ? 'success' : 'warning'"
+                  size="small"
+                >
+                  {{ announcement.type === 'homepage' ? '首页公告' : '顶部栏公告' }}
+                </el-tag>
+                <span class="announcement-date">{{ formatDate(announcement.createdAt) }}</span>
+              </div>
+            </div>
+            <div
+              class="announcement-content"
+              v-html="announcement.contentHtml || announcement.content"
+            />
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer class="home-footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>OneClickVirt</h3>
+          <div class="social-links">
+            <a
+              href="https://github.com/oneclickvirt"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-link"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                />
+              </svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h4>核心项目</h4>
+          <ul>
+            <li>
+              <a
+                href="https://github.com/oneclickvirt/oneclickvirt"
+                target="_blank"
+                rel="noopener noreferrer"
+              >OneClickVirt</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>相关项目</h4>
+          <ul>
+            <li>
+              <a
+                href="https://github.com/oneclickvirt/pve"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Proxmox VE</a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/oneclickvirt/incus"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Incus</a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/oneclickvirt/docker"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Docker</a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/oneclickvirt/lxd"
+                target="_blank"
+                rel="noopener noreferrer"
+              >LXD</a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/oneclickvirt"
+                target="_blank"
+                rel="noopener noreferrer"
+              >更多项目</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>支持与文档</h4>
+          <ul>
+            <li>
+              <a
+                href="https://www.spiritlhl.net/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >使用文档</a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/oneclickvirt/oneclickvirt/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+              >问题反馈</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; 2026 OneClickVirt. All rights reserved. |
+          <a
+            href="https://github.com/oneclickvirt"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            一键虚拟化旗下开源项目
+          </a>
+        </p>
+      </div>
+    </footer>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { getPublicAnnouncements } from '@/api/public'
+import { checkSystemInit } from '@/api/init'
+import { ElTag } from 'element-plus'
+
+const router = useRouter()
+const announcements = ref([])
+
+const formatDate = (dateString) => {
+  return new Date(dateString).toLocaleDateString('zh-CN')
+}
+
+const fetchAnnouncements = async () => {
+  try {
+    // 获取首页公告
+    const response = await getPublicAnnouncements('homepage')
+    if (response.code === 0 || response.code === 200) {
+      announcements.value = response.data.slice(0, 3) // 只显示最新3条
+    }
+  } catch (error) {
+    console.error('获取公告失败:', error)
+  }
+}
+
+const checkInitStatus = async () => {
+  try {
+    const response = await checkSystemInit()
+    console.log('首页检查初始化状态:', response)
+    if (response && response.code === 0 && response.data && response.data.needInit === true) {
+      console.log('系统需要初始化，跳转到初始化页面')
+      router.push('/init')
+    }
+  } catch (error) {
+    console.error('检查系统初始化状态失败:', error)
+    // 如果是网络错误或服务器错误，可能是数据库未初始化导致的
+    if (error.message.includes('Network Error') || 
+        error.response?.status >= 500 || 
+        error.code === 'ECONNREFUSED') {
+      console.warn('服务器连接失败，可能需要初始化，跳转到初始化页面')
+      router.push('/init')
+    }
+  }
+}
+
+onMounted(() => {
+  console.log('VITE_BASE_API:', import.meta.env.VITE_BASE_API)
+  console.log('VITE_BASE_PATH:', import.meta.env.VITE_BASE_PATH)
+  console.log('VITE_SERVER_PORT:', import.meta.env.VITE_SERVER_PORT)
+  console.log('All env vars:', import.meta.env)
+  
+  // 首先检查初始化状态
+  checkInitStatus()
+  // 然后获取公告
+  fetchAnnouncements()
+})
+</script>
+
+<style scoped>
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+}
+
+/* 头部样式 */
+.home-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 20px rgba(22, 163, 74, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(22, 163, 74, 0.1);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo h1 {
+  font-size: 28px;
+  color: #16a34a;
+  margin: 0;
+  font-weight: 700;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo span {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #374151;
+  padding: 12px 24px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  margin-left: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link:hover {
+  background: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  transform: translateY(-2px);
+}
+
+.nav-link.primary {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+  box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+}
+
+.nav-link.primary:hover {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+}
+
+/* 主要内容 */
+.home-main {
+  padding: 60px 0;
+}
+
+/* 英雄区域 */
+.hero-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 24px;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.hero-content {
+  flex: 1;
+  min-width: 400px;
+}
+
+.hero-title {
+  font-size: 52px;
+  color: #1f2937;
+  margin-bottom: 24px;
+  line-height: 1.2;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1f2937, #374151);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-description {
+  font-size: 20px;
+  color: #6b7280;
+  margin-bottom: 40px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-block;
+  padding: 16px 32px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+  box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(22, 163, 74, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #16a34a;
+  border: 2px solid #16a34a;
+  box-shadow: 0 4px 15px rgba(22, 163, 74, 0.1);
+}
+
+.btn-secondary:hover {
+  background: #16a34a;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+}
+
+.hero-image {
+  flex: 1;
+  min-width: 400px;
+}
+
+.feature-preview {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.preview-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(22, 163, 74, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(22, 163, 74, 0.1);
+}
+
+.preview-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(22, 163, 74, 0.2);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+
+.card-icon {
+  font-size: 42px;
+  margin-bottom: 16px;
+}
+
+.preview-card h3 {
+  font-size: 18px;
+  color: #1f2937;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.preview-card p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* 支持的虚拟化平台 */
+.platforms-section {
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.section-header {
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 42px;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1f2937, #374151);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-header p {
+  font-size: 18px;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 400;
+}
+
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 32px;
+  margin-top: 60px;
+}
+
+.platform-item {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 40px 24px;
+  border-radius: 24px;
+  box-shadow: 0 8px 25px rgba(22, 163, 74, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(22, 163, 74, 0.1);
+  text-align: center;
+}
+
+.platform-item:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+
+.platform-icon {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.platform-item h3 {
+  font-size: 20px;
+  color: #1f2937;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.platform-item p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* 系统公告 */
+.announcements-section {
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 60px 24px;
+}
+
+.announcements-list {
+  display: grid;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.announcement-item {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(22, 163, 74, 0.05);
+  border: 1px solid rgba(22, 163, 74, 0.1);
+  transition: all 0.3s ease;
+}
+
+.announcement-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(22, 163, 74, 0.1);
+  border-color: rgba(22, 163, 74, 0.2);
+}
+
+.announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.announcement-header h3 {
+  font-size: 18px;
+  color: #1f2937;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+.announcement-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.announcement-date {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.announcement-content {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 富文本内容样式 */
+.announcement-content :deep(p) {
+  margin: 8px 0;
+}
+
+.announcement-content :deep(ul),
+.announcement-content :deep(ol) {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.announcement-content :deep(blockquote) {
+  border-left: 4px solid #16a34a;
+  padding-left: 16px;
+  margin: 16px 0;
+  font-style: italic;
+  background: rgba(22, 163, 74, 0.05);
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.announcement-content :deep(strong) {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.announcement-content :deep(code) {
+  background: rgba(22, 163, 74, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+}
+
+/* 页脚 */
+.home-footer {
+  background: linear-gradient(135deg, #1f2937, #374151);
+  color: white;
+  padding: 60px 24px 24px;
+  font-size: 14px;
+  margin-top: 100px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-section h3,
+.footer-section h4 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a,
+.social-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+}
+
+.footer-section ul li a:hover,
+.social-link:hover {
+  color: #22c55e;
+  transform: translateX(5px);
+}
+
+.social-link svg {
+  margin-right: 8px;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.footer-bottom a {
+  color: #22c55e;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.footer-bottom a:hover {
+  color: #34d399;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+    padding: 40px 20px;
+  }
+
+  .hero-content {
+    min-width: unset;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .hero-description {
+    font-size: 18px;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-image {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .platforms-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .platform-item {
+    padding: 32px 20px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-section {
+    margin-bottom: 32px;
+  }
+
+  .footer-section ul li a,
+  .social-link {
+    justify-content: center;
+  }
+
+  .footer-section ul li a:hover {
+    transform: none;
+  }
+
+  .header-content {
+    padding: 0 20px;
+  }
+
+  .section-header h2 {
+    font-size: 32px;
+  }
+
+  .section-header p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .hero-description {
+    font-size: 16px;
+  }
+
+  .btn {
+    padding: 14px 28px;
+    font-size: 15px;
+  }
+
+  .platforms-section,
+  .announcements-section {
+    padding: 40px 20px;
+  }
+
+  .section-header h2 {
+    font-size: 28px;
+  }
+}
+</style>

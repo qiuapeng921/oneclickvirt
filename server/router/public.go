@@ -1,0 +1,24 @@
+package router
+
+import (
+	"github.com/gin-gonic/gin"
+	"oneclickvirt/api/v1/public"
+	"oneclickvirt/api/v1/system"
+)
+
+func InitPublicRouter(Router *gin.RouterGroup) {
+	PublicRouter := Router.Group("v1/public")
+	{
+		PublicRouter.GET("announcements", system.GetAnnouncement)
+		PublicRouter.GET("stats", public.GetDashboardStats)
+		PublicRouter.GET("init/check", public.CheckInit)
+		PublicRouter.POST("init", public.InitSystem)
+		PublicRouter.POST("test-db-connection", public.TestDatabaseConnection)
+		PublicRouter.GET("register-config", public.GetRegisterConfig)
+		PublicRouter.GET("system-images/available", system.GetAvailableSystemImages)
+	}
+	StaticRouter := Router.Group("v1/static")
+	{
+		StaticRouter.GET(":type/*path", system.ServeStaticFile)
+	}
+}

@@ -1,0 +1,41 @@
+package global
+
+import (
+	"context"
+	"oneclickvirt/config"
+
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
+)
+
+// Scheduler 调度器接口，避免循环导入
+type Scheduler interface {
+	StartScheduler()
+	StopScheduler()
+	TriggerTaskProcessing() // 立即触发任务处理
+}
+
+// MonitoringScheduler 监控调度器接口
+type MonitoringScheduler interface {
+	Start(ctx context.Context)
+	Stop()
+	IsRunning() bool
+}
+
+// TaskLockReleaser 任务锁释放器接口
+type TaskLockReleaser interface {
+	ReleaseTaskLocks(taskID uint)
+}
+
+var (
+	APP_DB                   *gorm.DB
+	APP_LOG                  *zap.Logger
+	APP_CONFIG               config.Server
+	APP_VP                   *viper.Viper
+	APP_ENGINE               *gin.Engine
+	APP_SCHEDULER            Scheduler           // 任务调度器全局变量
+	APP_MONITORING_SCHEDULER MonitoringScheduler // 监控调度器全局变量
+	APP_TASK_LOCK_RELEASER   TaskLockReleaser    // 任务锁释放器全局变量
+)
